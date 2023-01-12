@@ -15,7 +15,7 @@ from tensorflow.keras.callbacks import ReduceLROnPlateau
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 # output test
-output_path = "../../output/"
+output_path = "output path" # eg. ./output/
 
 try:
     with open(output_path+"test.txt", mode="x") as f:
@@ -25,8 +25,8 @@ except FileExistsError:
     pass
 
 # Load the data
-train = pd.read_csv("./data/train.csv")
-test = pd.read_csv("./data/test.csv")
+train = pd.read_csv("train data path") # eg. ./data/train.csv
+test = pd.read_csv("test data path") # eg. ./data/test.csv
 
 y_train = train["label"]
 
@@ -53,7 +53,7 @@ random_seed = 2
 train, val, y_train, y_val = train_test_split(train, y_train, test_size=0.1, random_state=random_seed)
 
 # Show example
-plt.imsave("../../output/example.png", train[0][:,:,0])
+plt.imsave("output example image path", train[0][:,:,0]) # eg. ./output/example.png
 
 # Define model
 model = Sequential([
@@ -161,7 +161,7 @@ preds = model.predict(test)
 preds = np.argmax(preds, axis=1)
 preds = pd.Series(preds, name="Label")
 submission = pd.concat([pd.Series(range(1, 28001), name="ImageId"), preds], axis=1)
-submission.to_csv(output_path+"cnn_keras_submission.csv", index=False)
+submission.to_csv(output_path+"vgg_submission.csv", index=False)
 
 # Checking error
 # Predict the values from the validation set
