@@ -15,11 +15,11 @@ from tensorflow.keras.callbacks import ReduceLROnPlateau
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 # output test
-output_path = "../../output/"
+output_path = "output path" # eg. ./output
 
 # Load the data
-train = pd.read_csv("./data/train.csv")
-test = pd.read_csv("./data/test.csv")
+train = pd.read_csv("train data path") # eg. ./data/train.csv
+test = pd.read_csv("test data path") # eg. ./data/test.csv
 
 y_train = train["label"]
 
@@ -46,7 +46,7 @@ random_seed = 2
 train, val, y_train, y_val = train_test_split(train, y_train, test_size=0.1, random_state=random_seed)
 
 # Show example
-# plt.imsave("../../output/example.png", train[0][:,:,0])
+# plt.imsave("output image path", train[0][:,:,0]) # eg. ./output/example.png
 
 # Define model
 model = Sequential([
@@ -82,11 +82,6 @@ batch_size=86
 aug = np.arange(0, 0.25, 0.05)
 print(aug.shape)
 
-# fig, ax = plt.subplots(5, 2)
-# plt.subplots_adjust(wspace=0.4, hspace=0.6)
-# fig.suptitle("Loss(left), Accuracy(right)\ntraining(blue), validation(red)")
-# row = 0
-# col = 0
 n = 1
 results = []
 for i in aug:
