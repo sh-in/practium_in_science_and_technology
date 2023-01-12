@@ -134,10 +134,10 @@ torch.manual_seed(1234)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # output test
-output_path = "../../output/"
+output_path = "output path" # eg. ./output
 
 # Load the data
-Train = pd.read_csv("./data/train.csv", dtype=np.float32)
+Train = pd.read_csv("train data path", dtype=np.float32) # eg. ./data/train.csv
 
 # Split data into pixels and labels
 x_train = Train.loc[:, Train.columns != "label"].values/255
@@ -174,7 +174,7 @@ x1, y1 = tmp.next()
 # print(x1[0].shape)
 
 # Show example
-plt.imsave("../../output/example.png", x_train[0].reshape(28, 28))
+plt.imsave("output path for example iamge", x_train[0].reshape(28, 28)) # eg. ./output/egxample.png
 
 # Build model
 model = ResNet50(10).to(device)
@@ -246,15 +246,15 @@ fig = plt.figure()
 plt.plot(train_acc_list, label="Training acc")
 plt.plot(val_acc_list, label="Validation acc")
 plt.legend()
-fig.savefig(output_path+"ResNet_adj_Acc.png")
+fig.savefig(output_path+"ResNet_Acc.png")
 fig = plt.figure()
 plt.plot(train_loss_list, label="Training loss")
 plt.plot(val_loss_list, label="Validation loss")
 plt.legend()
-fig.savefig(output_path+"ResNet_adj_Loss.png")
+fig.savefig(output_path+"ResNet_Loss.png")
 
 # Load test data
-Test = pd.read_csv("./data/test.csv", dtype=np.float32)
+Test = pd.read_csv("test data path", dtype=np.float32) # eg. ./data/test.csv
 Test = Test.values
 Test = Test.reshape(-1, 1, 28, 28)
 Test = Test/255
@@ -283,4 +283,4 @@ pred_list = np.array(pred_list)
 ID_lists = np.arange(1, pred_list.shape[0]+1)
 
 submissions = pd.DataFrame({"ImageId": ID_lists, "Label": pred_list})
-submissions.to_csv(output_path+"ResNet_adj_submissions.csv", index=False, header=True)
+submissions.to_csv(output_path+"ResNet_submissions.csv", index=False, header=True)
