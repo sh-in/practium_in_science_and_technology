@@ -68,7 +68,6 @@ class RNNModel(nn.Module):
     # data length means how long term treat as one block
     def forward(self, xs, state=None):
         # create tensor
-        # y = torch.tensor(xs.size(1), dtype=torch.float)
         y = torch.tensor(0, dtype=torch.float)
         ys = torch.zeros([xs.size(0), 128], dtype=torch.float)
         state = torch.tensor(0, dtype=torch.int)
@@ -77,16 +76,6 @@ class RNNModel(nn.Module):
         y = y.to(device)
         ys = ys.to(device)
         state = state.to(device)
-        # print("ys.shape", ys.shape)
-        # print("xs.shape", xs.shape) # torch.Size([64, 28, 28])
-
-        # for i, x in enumerate(xs):
-        #     print("x.shape", x.shape)
-        #     ys[i], state = self.rnn(x, ys[i], state)
-
-        # print("ys.shape", ys.shape)
-        # ys = self.out(ys[:, -1, :])
-        # print("ys.shape", ys.shape)
 
         # loop for each batch
         for i, x in enumerate(xs):
@@ -95,28 +84,13 @@ class RNNModel(nn.Module):
             for s in x:
                 y, state = self.rnn(s, y, state)
             ys[i] = y
-
-        # y, state = self.rnn(xs, y, state)
-        # print("--------------------------------------")
-        # print("y.shape", y.shape) # torch.Size([64, 28, 128])
-        # print(y[:, -1, :].shape) # torch.Size([64, 128])
-        
-        # hidden layers are 0
-        # yt = y[:, -1, :] # pick up the last hidden information
-        # print(yt[0])
-
-        # y = self.out(y[:, -1, :])
-        # print("ys.shape", ys.shape)
         ys = self.out(ys)
-        # print("ys.shape", ys.shape)
-        # print("y.shape", y.shape) # torch.Size([64, 10])
-        # print(y[0])
 
         return ys
 
 
 # output test
-output_path = "../../output/"
+output_path = "output path" # eg. ./output
 # path for output
 if os.path.exists(output_path + "mnist/RNN_MNIST") == False:
     os.makedirs(output_path + "mnist/RNN_MNIST")
@@ -127,8 +101,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Prepare Dataset
 # Load data
-train = pd.read_csv("./data/train.csv", dtype=np.float32)
-Test = pd.read_csv("./data/test.csv", dtype=np.float32)
+train = pd.read_csv("train data path", dtype=np.float32) # eg. ./data/train.csv
+Test = pd.read_csv("test data path", dtype=np.float32)
 
 # Split data into features and labels
 targets_numpy = train.label.values
@@ -233,41 +207,25 @@ for epoch in range(1, epochs+1):
     test_loss = 0
     test_acc = 0
 
-    #print("epoch: ", epoch)
-    #print("start training")
     # training set
     for i, (x, t) in enumerate(train_loader):
-        #if i%10==0:
-            #print("training: {}/{}".format(i, len(train_loader)))
         x, t = x.to(device), t.to(device)
-        # print("x.shape", x.shape) # torch.Size([64, 784])
-        # print("t.shape", t.shape) # torch.Size([64])
         x = x.reshape(batch_size, seq_size, feature_size)
-        # print("x.shape", x.shape) # torch.Size([64, 784])
-        # print("t.shape", t.shape) # torch.Size([64])
-        # print("(x.reshape(batch_size, seq_size, feature_size)).shape", (x.reshape(batch_size, seq_size, feature_size)).shape) # torch.Size([64, 28, 28])
         loss, preds = train_step(x, t)
-        # print("len(t.tolist())", len(t.tolist())) # 64
-        # print(len(preds.argmax(dim=-1).tolist())) # 64
         train_loss += loss.item()
         train_acc += accuracy_score(t.tolist(), preds.argmax(dim=-1).tolist())
         
-    #print("finish training")
     train_loss /= len(train_loader)
     train_acc /= len(train_loader)
 
-    #print("start testing")
     # validation set
     for i, (x, t) in enumerate(test_loader):
-        #if i%10==0:
-            #print("testing: {}/{}".format(i, len(test_loader)))
         x, t = x.to(device), t.to(device)
         x = x.reshape(batch_size_test, seq_size, feature_size)
         loss, preds = test_step(x, t)
         test_loss += loss.item()
         test_acc += accuracy_score(t.tolist(), preds.argmax(dim=-1).tolist())
-    
-    #print("finish testing")
+
     test_loss /= len(test_loader)
     test_acc /= len(test_loader)
 
@@ -309,11 +267,6 @@ outputs = []
 model.eval()
 preds = model(DTest)
 preds = np.argmax(preds, axis=1)
-# for x in DTest:
-#     x = x.to(device)
-#     model.eval()
-#     preds = model(x)
-#     outputs.append(preds.argmax(dim=-1))
 preds = pd.Series(outputs, name="Label")
 submission = pd.concat([pd.Series(range(1, 28001), name="ImageId"), preds], axis=1)
-submission.to_csv(output_path+"cnn_keras_submission.csv", index=False)
+submission.to_csv(output_path+"rnn_submission.csv", index=False)
