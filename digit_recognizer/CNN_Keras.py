@@ -15,18 +15,11 @@ from tensorflow.keras.callbacks import ReduceLROnPlateau
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 # output test
-output_path = "../../output/"
-
-try:
-    with open(output_path+"test.txt", mode="x") as f:
-        f.write("test")
-        f.close()
-except FileExistsError:
-    pass
+output_path = "output_path" # eg. ./output
 
 # Load the data
-train = pd.read_csv("./data/train.csv")
-test = pd.read_csv("./data/test.csv")
+train = pd.read_csv("train data path") # eg. ./data/train.csv
+test = pd.read_csv("test data path") # eg. ./data/test.csv
 
 y_train = train["label"]
 
