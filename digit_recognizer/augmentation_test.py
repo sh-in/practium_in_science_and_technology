@@ -115,22 +115,7 @@ for i in aug:
     )
 
     results.append(model.evaluate(val, y_val))
-    # using subplot
-    # print(row)
-    # print(col)
-    # Show the training and validation curves
-    # ax[row, col].plot(history.history["loss"], color="b", label="Training loss")
-    # ax[row, col].plot(history.history["val_loss"], color="r", label="Validation loss", axes=ax[row, col])
-    # col+=1
-
-    # ax[row, col].plot(history.history["accuracy"], color="b", label="Training accuracy")
-    # ax[row, col].plot(history.history["val_accuracy"], color="r", label="Validation accuracy")
-
-    # row+=1
-    # col=0
-    # if row==3:
-        # fig.savefig(output_path+"training_validation_curves.png")
-
+    
     # plot one by one
     fig, ax = plt.subplots(1, 2)
     plt.subplots_adjust(wspace=0.4, hspace=0.6)
@@ -159,4 +144,4 @@ preds = model.predict(test)
 preds = np.argmax(preds, axis=1)
 preds = pd.Series(preds, name="Label")
 submission = pd.concat([pd.Series(range(1, 28001), name="ImageId"), preds], axis=1)
-submission.to_csv(output_path+"cnn_keras_submission.csv", index=False)
+submission.to_csv(output_path+"aug_test_submission.csv", index=False)
